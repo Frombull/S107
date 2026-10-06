@@ -3,6 +3,47 @@
 Projeto da disciplina **S107 - Gerência de Configuração e Evolução de Software**.
 O app é descartável: o objetivo real é praticar e testar um pipeline de CI/CD no **Jenkins**.
 
+## O app: Tribunal dos Gatos
+
+Escolhido em 2026-10-05. Cadastra-se um gato (nome, imagem meme e o "crime" cometido) e a turma vota **Culpado** ou **Inocente**. Será usado numa votação em sala de aula na apresentação, então precisa ser divertido e funcionar bem com muita gente votando ao mesmo tempo.
+
+Regras de negócio previstas (alvo dos testes):
+
+- um voto por pessoa por gato;
+- o veredito muda ao atingir o limite de votos;
+- gato condenado vai para a "Prisão da Soneca";
+- nome do gato e crime obrigatórios, imagem com URL válida.
+
+Fluxo E2E principal: cadastrar gato → votar → ver o veredito.
+
+## Formato: "Kahoot de Tribunal de Gato"
+
+Decidido em 2026-10-05. Ideia: simples e divertido.
+
+1. O apresentador (painel protegido por senha simples) cria uma sessão e mostra um QR code com o código da sala.
+2. A turma entra pelo QR, digita só o nome e espera no lobby.
+3. O apresentador clica em "Próximo": aparece o gato com o crime, e os alunos votam.
+4. O apresentador clica em "Revelar": todos veem o placar e o veredito. Depois vem o próximo gato.
+5. No fim, um resumo (gato mais culpado etc.).
+
+Estados da sessão: `LOBBY → VOTANDO → RESULTADO → VOTANDO → ... → FIM`. Só se vota em `VOTANDO`, o voto é único e imutável, o nome é único na sessão e só o apresentador avança o estado.
+
+Decisões técnicas:
+
+- Deploy na Vercel; tempo real por **polling** (~1,5 s), sem WebSocket.
+- Identidade do participante: nome + cookie anônimo, sem login.
+- Imagens dos gatos por **URL** (sem upload).
+- Postgres hospedado (Neon ou Vercel Postgres) com pooling do Prisma; Docker Compose só para dev local e CI.
+- Modelo: `Session`, `Cat`, `Participant`, `Vote` (único por participante + gato).
+- E2E no Playwright com dois navegadores (apresentador e aluno).
+
+## Visual
+
+- Bobinho e divertido, estilo "macarrão": fontes arredondadas, gordinhas e curvas, bem de brincadeira.
+- **Nada de fonte monoespaçada** nem visual sério/corporativo.
+- Fontes ainda não escolhidas (candidatas: Fredoka, Baloo 2, Chewy, Bubblegum Sans, via Google Fonts).
+- Cores vibrantes e animações leves (o gatinho correndo pela tela pode ser só efeito visual, com emoji ou uma sprite sheet única).
+
 ## Stack
 
 - Frontend: Next.js + shadcn/ui
