@@ -1,0 +1,15 @@
+{
+  "name": "s107",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=11",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
+  "scripts": {
+    "preinstall": "npx --yes only-allow pnpm"
+  }
+}
