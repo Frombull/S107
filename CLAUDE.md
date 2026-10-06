@@ -56,6 +56,17 @@ Decisões técnicas:
 - Deploy: Vercel
 - CI/CD: Jenkins
 
+## Branches
+
+Definido em 2026-10-06. A branch principal é **`master`** (não `main`) e existe a branch de integração **`dev`**.
+
+- Fluxo: `feature/*` (ou `docs/*`, `fix/*`) → PR → `dev` → PR → `master`. `master` é o que vai para produção na Vercel.
+- Nada de push direto em `master` nem em `dev`: as duas são protegidas no GitHub (vale também para o admin).
+- Check obrigatório nas duas: **`Vercel`** (passa como `success` mesmo quando o `ignoreCommand` cancela o build). Em `master` a branch também precisa estar atualizada antes do merge.
+- Sem exigência de aprovação de review (repo individual). Subir para 1 aprovação se mais gente entrar.
+- Quando o Jenkins existir, adicionar o contexto dele (ex.: `continuous-integration/jenkins/branch`) aos checks obrigatórios das duas branches. Multibranch Pipeline cobre `dev`, `master` e PRs.
+- Production Branch da Vercel (Settings → Git) deve ser `master`.
+
 ## Regras
 
 - **Gerenciador de pacotes: somente pnpm.** Nunca usar `npm` nem `yarn`, nem gerar `package-lock.json` ou `yarn.lock`.
