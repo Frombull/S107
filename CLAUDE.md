@@ -3,9 +3,9 @@
 Projeto da disciplina **S107 - Gerência de Configuração e Evolução de Software**.
 O app é descartável: o objetivo real é praticar e testar um pipeline de CI/CD no **Jenkins**.
 
-## O app: Tribunal dos Gatos
+## O app: Cathoot
 
-Escolhido em 2026-10-05. Cadastra-se um gato (nome, imagem meme e o "crime" cometido) e a turma vota **Culpado** ou **Inocente**. Será usado numa votação em sala de aula na apresentação, então precisa ser divertido e funcionar bem com muita gente votando ao mesmo tempo.
+O app se chama **Cathoot** (nome definido em 2026-10-06): o "Kahoot de tribunal de gato". Ideia escolhida em 2026-10-05 (o conceito original era "Tribunal dos Gatos"). Cadastra-se um gato (nome, imagem meme e o "crime" cometido) e a turma vota **Culpado** ou **Inocente**. Será usado numa votação em sala de aula na apresentação, então precisa ser divertido e funcionar bem com muita gente votando ao mesmo tempo.
 
 Regras de negócio previstas (alvo dos testes):
 
@@ -16,7 +16,7 @@ Regras de negócio previstas (alvo dos testes):
 
 Fluxo E2E principal: cadastrar gato → votar → ver o veredito.
 
-## Formato: "Kahoot de Tribunal de Gato"
+## Formato: "Kahoot de Tribunal de Gato" (Cathoot)
 
 Decidido em 2026-10-05. Ideia: simples e divertido.
 
@@ -30,7 +30,9 @@ Estados da sessão: `LOBBY → VOTANDO → RESULTADO → VOTANDO → ... → FIM
 
 Decisões técnicas:
 
-- Deploy na Vercel; tempo real por **polling** (~1,5 s), sem WebSocket.
+- Monorepo único (`apps/web` com Next.js; `apps/api` com NestJS virá depois), workspace pnpm na raiz.
+- Deploy na Vercel com **Root Directory = `./apps/web`**; tempo real por **polling** (~1,5 s), sem WebSocket.
+- Deploy só quando o código do `apps/web` muda: `ignoreCommand` em `apps/web/vercel.json` (`git diff --quiet HEAD^ HEAD -- . ':(exclude)*.md'`, roda dentro do Root Directory). O **Skip deployment** automático da Vercel não basta: arquivos fora do workspace (`apps/*`), como o `README.md` e o `CLAUDE.md` da raiz, contam como mudança global e geram deploy (confirmado no push `39a2805`). Custo: builds cancelados pelo `ignoreCommand` contam na cota de deployments.
 - Identidade do participante: nome + cookie anônimo, sem login.
 - Imagens dos gatos por **URL** (sem upload).
 - Postgres hospedado (Neon ou Vercel Postgres) com pooling do Prisma; Docker Compose só para dev local e CI.

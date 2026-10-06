@@ -1,8 +1,8 @@
-# S107
+# Cathoot
 
-Projeto da disciplina **S107 - Gerência de Configuração e Evolução de Software**.
+O Kahoot de crimes de gato: a turma vota se cada gato é **Culpado** ou **Inocente** pelo crime cometido.
 
-O foco é praticar integração e entrega contínua (CI/CD) com pipelines no **Jenkins**.
+Projeto de **S107 - Gerência de Configuração e Evolução de Software**.
 
 ## Stack
 
@@ -13,3 +13,5 @@ O foco é praticar integração e entrega contínua (CI/CD) com pipelines no **J
 - **Testes E2E:** Playwright
 - **Deploy:** Vercel
 - **CI/CD:** Jenkins
+
+#### Marco Di Toro | 150 | GES
